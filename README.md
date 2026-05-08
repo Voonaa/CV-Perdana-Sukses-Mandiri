@@ -1,20 +1,65 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# CV Perdana Sukses Mandiri - Company Profile
 
-# Run and deploy your AI Studio app
+Website profil perusahaan untuk CV Perdana Sukses Mandiri, menampilkan solusi industri presisi seperti videotron, lampu surya, dan infrastruktur kantor.
 
-This contains everything you need to run your app locally.
+Website ini menggunakan arsitektur **Fullstack** dengan React di bagian frontend dan Express di bagian backend, serta menggunakan database **MySQL**.
 
-View your app in AI Studio: https://ai.studio/apps/c15084fd-40a5-4807-8a2a-0e2aa4b9ab8d
+## Teknologi yang Digunakan
+- **Frontend**: React 19, Vite, Tailwind CSS v4, Motion
+- **Backend**: Node.js, Express
+- **Database**: MySQL (via Laragon)
 
-## Run Locally
+## Cara Menjalankan Project
 
-**Prerequisites:**  Node.js
+### Prasyarat
+1.  **Node.js** terinstal di komputer Anda.
+2.  **Laragon** (atau server MySQL lokal lainnya) sedang berjalan.
 
+### Langkah-langkah
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1.  **Pastikan Database Siap**:
+    *   Buat database bernama `CVperdana` di MySQL.
+    *   Buat tabel `contacts` dengan struktur berikut (atau jalankan perintah SQL):
+        ```sql
+        CREATE TABLE contacts (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          inquiry_type VARCHAR(255) NOT NULL,
+          message TEXT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        ```
+
+2.  **Instalasi Dependensi**:
+    Buka terminal di folder project ini dan jalankan:
+    ```bash
+    npm install
+    ```
+
+3.  **Konfigurasi Environment**:
+    Pastikan file `.env` sudah ada dan berisi kredensial database yang benar:
+    ```env
+    DB_HOST="localhost"
+    DB_USER="root"
+    DB_PASSWORD=""
+    DB_NAME="CVperdana"
+    ```
+
+4.  **Jalankan Frontend**:
+    Di terminal pertama, jalankan perintah berikut untuk membuka website di browser:
+    ```bash
+    npm run dev
+    ```
+    Website akan dapat diakses di `http://localhost:3000/`.
+
+5.  **Jalankan Backend (API)**:
+    Buka terminal baru (atau tab baru) di folder yang sama, lalu jalankan:
+    ```bash
+    npx tsx server.ts
+    ```
+    Server backend akan berjalan di port 5000 dan menangani pengiriman form kontak.
+
+## Catatan
+- Website ini tidak lagi menggunakan API Gemini. Semua referensi ke Gemini telah dihapus.
+- Jika Anda ingin mengubah tampilan atau menambahkan halaman baru, Anda dapat memodifikasi file di dalam folder `src/`.

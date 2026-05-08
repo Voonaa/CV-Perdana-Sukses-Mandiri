@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, ChevronRight, Play, Shield, Zap, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { PRODUCTS, STATS } from '../constants';
+import { STATS } from '../constants';
 
 export default function Home() {
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        const parsedData = data.map((p: any) => ({
+          ...p,
+          specs: typeof p.specs === 'string' ? JSON.parse(p.specs) : p.specs
+        }));
+        setProducts(parsedData);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
@@ -47,7 +62,10 @@ export default function Home() {
                 JELAJAHI SOLUSI
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <button className="px-10 py-5 glass-morphism text-white font-bold rounded flex items-center gap-3 hover:bg-white/10 transition-all border border-white/20">
+              <button 
+                onClick={() => document.getElementById('advantage')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-10 py-5 glass-morphism text-white font-bold rounded flex items-center gap-3 hover:bg-white/10 transition-all border border-white/20"
+              >
                 <div className="w-8 h-8 rounded-full bg-brand-gold flex items-center justify-center">
                   <Play className="w-3 h-3 text-industrial-black fill-current ml-0.5" />
                 </div>
@@ -108,7 +126,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {PRODUCTS.filter(p => p.featured).map((product, idx) => (
+            {products.filter(p => p.featured === 1 || p.featured === true).slice(0, 3).map((product, idx) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -143,7 +161,7 @@ export default function Home() {
       </section>
 
       {/* Advantage Section */}
-      <section className="py-32 px-6 bg-industrial-gray/50 relative">
+      <section id="advantage" className="py-32 px-6 bg-industrial-gray/50 relative">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
             <div className="relative">

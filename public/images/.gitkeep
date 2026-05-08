@@ -1,0 +1,2 @@
+# Folder untuk menyimpan gambar produk
+# Anda bisa memasukkan file gambar di sini dan memanggilnya di Admin CRUD dengan path: /images/nama-file.jpg

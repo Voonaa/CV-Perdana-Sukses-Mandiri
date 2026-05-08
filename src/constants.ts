@@ -63,8 +63,8 @@ export const STATS: Statistics[] = [
 
 export const CONTACT_INFO = {
   whatsapp: '+6288976738570',
-  address: 'CV Perdana Sukses Mandiri, JXQG+9M8, Pringsewu Tim., Kec. Pringsewu, Kab. Pringsewu, Lampung 35373',
-  googleMapsPlusCode: 'JXQG+9M8',
+  address: 'CV Perdana Sukses Mandiri, QFQP+2XJ Sukanagara, Tangerang Regency, Banten',
+  googleMapsPlusCode: 'QFQP+2XJ',
   email: 'solutions@psm-industrial.com',
   phone: '+62 889-7673-8570'
 };

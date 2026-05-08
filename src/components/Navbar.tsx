@@ -59,13 +59,6 @@ export default function Navbar() {
               )}
             </Link>
           ))}
-          <Link 
-            to="/kontak" 
-            className="px-6 py-2 bg-white text-industrial-black text-sm font-bold rounded hover:bg-brand-gold transition-colors flex items-center gap-2 group"
-          >
-            MINTA PENAWARAN
-            <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-          </Link>
         </div>
 
         {/* Mobile Toggle */}

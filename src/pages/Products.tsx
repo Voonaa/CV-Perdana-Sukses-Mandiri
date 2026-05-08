@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Search, ArrowUpRight, CheckCircle } from 'lucide-react';
-import { PRODUCTS } from '../constants';
+import { Link } from 'react-router-dom';
+import { CONTACT_INFO } from '../constants';
 
 const CATEGORIES = ['Semua', 'Videotron', 'Lampu Jalan Tenaga Surya', 'Meja Pelayanan Kantor Desa', 'Neon Box', 'Running Text', 'Papan Billboard', 'Plafon', 'Wastafel', 'Mesin Antrian'];
 
 export default function Products() {
   const [activeCategory, setActiveCategory] = useState('Semua');
   const [search, setSearch] = useState('');
+  const [products, setProducts] = useState<any[]>([]);
 
-  const filtered = PRODUCTS.filter(p => {
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        const parsedData = data.map((p: any) => ({
+          ...p,
+          specs: typeof p.specs === 'string' ? JSON.parse(p.specs) : p.specs
+        }));
+        setProducts(parsedData);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  const filtered = products.filter(p => {
     const matchesCat = activeCategory === 'Semua' || p.category === activeCategory;
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || 
                          p.description.toLowerCase().includes(search.toLowerCase());
@@ -100,9 +115,12 @@ export default function Products() {
                       ))}
                     </div>
 
-                    <button className="w-full py-4 bg-white/5 group-hover:bg-brand-gold text-white group-hover:text-industrial-black font-black text-sm rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <Link 
+                      to="/kontak"
+                      className="w-full py-4 bg-white/5 group-hover:bg-brand-gold text-white group-hover:text-industrial-black font-black text-sm rounded-xl flex items-center justify-center gap-2 transition-all"
+                    >
                       MINTA SPESIFIKASI <ArrowUpRight className="w-4 h-4" />
-                    </button>
+                    </Link>
                   </div>
                 </motion.div>
               ))}

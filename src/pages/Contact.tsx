@@ -4,6 +4,39 @@ import { Mail, Phone, MapPin, Send, Instagram, Linkedin, MessageCircle } from 'l
 import { CONTACT_INFO } from '../constants';
 
 export default function Contact() {
+  const [formData, setFormData] = React.useState({
+    name: '',
+    email: '',
+    inquiry_type: 'Proyek Videotron',
+    message: ''
+  });
+  const [status, setStatus] = React.useState({ type: '', message: '' });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus({ type: 'loading', message: 'Mengirim...' });
+    try {
+      const response = await fetch('/api/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setStatus({ type: 'success', message: 'Pesan berhasil dikirim!' });
+        setFormData({ name: '', email: '', inquiry_type: 'Proyek Videotron', message: '' });
+      } else {
+        setStatus({ type: 'error', message: data.error || 'Gagal mengirim pesan.' });
+      }
+    } catch (error) {
+      setStatus({ type: 'error', message: 'Terjadi kesalahan koneksi.' });
+    }
+  };
+
   const handleWhatsApp = () => {
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp.replace('+', '')}`, '_blank');
   };
@@ -62,8 +95,8 @@ export default function Contact() {
                   <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Alamat Pusat</h4>
                   <p className="text-xl font-bold text-white">
                     CV Perdana Sukses Mandiri<br />
-                    Pringsewu Tim., Kec. Pringsewu<br />
-                    Kab. Pringsewu, Lampung 35373
+                    QFQP+2XJ Sukanagara<br />
+                    Tangerang Regency, Banten
                   </p>
                 </div>
               </div>
@@ -71,7 +104,7 @@ export default function Contact() {
 
             <div className="mt-12 rounded-2xl overflow-hidden grayscale contrast-125 border border-white/10 h-64">
               <iframe 
-                src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.1!2d104.9!3d-5.3!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMTgnMzUuNyJTIDEwNMKwNTUnMjkuNSJF!5e0!3m2!1sid!2sid!4v1715172000000!5m2!1sid!2sid`}
+                src="https://www.google.com/maps?q=QFQP%2B2XJ+Sukanagara,+Tangerang+Regency,+Banten&output=embed"
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
@@ -91,29 +124,42 @@ export default function Contact() {
                <div className="w-16 h-16 border-r border-t border-brand-gold/20" />
             </div>
             
-            <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Nama Lengkap</label>
                   <input 
                     type="text" 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     className="w-full bg-industrial-black/50 border border-white/5 rounded-xl px-6 py-4 text-white focus:border-brand-gold focus:outline-none transition-colors" 
                     placeholder="Contoh: Budi Santoso"
+                    required
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Email Kerja</label>
                   <input 
                     type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     className="w-full bg-industrial-black/50 border border-white/5 rounded-xl px-6 py-4 text-white focus:border-brand-gold focus:outline-none transition-colors" 
                     placeholder="budi@perusahaan.com"
+                    required
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Jenis Pertanyaan</label>
-                <select className="w-full bg-industrial-black/50 border border-white/5 rounded-xl px-6 py-4 text-white focus:border-brand-gold focus:outline-none transition-colors appearance-none">
+                <select 
+                  name="inquiry_type"
+                  value={formData.inquiry_type}
+                  onChange={handleChange}
+                  className="w-full bg-industrial-black/50 border border-white/5 rounded-xl px-6 py-4 text-white focus:border-brand-gold focus:outline-none transition-colors appearance-none"
+                >
                   <option>Proyek Videotron</option>
                   <option>Penerangan Jalan Surya</option>
                   <option>Furnitur Kantor Desa</option>
@@ -125,15 +171,29 @@ export default function Contact() {
               <div>
                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Pesan / Kebutuhan</label>
                 <textarea 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   rows={5}
                   className="w-full bg-industrial-black/50 border border-white/5 rounded-xl px-6 py-4 text-white focus:border-brand-gold focus:outline-none transition-colors" 
                   placeholder="Ceritakan tentang proyek Anda atau kebutuhan peralatan khusus..."
+                  required
                 />
               </div>
 
-              <button className="w-full py-6 bg-brand-gold text-industrial-black font-black text-lg rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform shadow-xl">
-                KIRIM PERMINTAAN <Send className="w-5 h-5" />
+              <button 
+                type="submit"
+                disabled={status.type === 'loading'}
+                className="w-full py-6 bg-brand-gold text-industrial-black font-black text-lg rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {status.type === 'loading' ? 'MENGIRIM...' : 'KIRIM PERMINTAAN'} <Send className="w-5 h-5" />
               </button>
+              
+              {status.message && (
+                <div className={`text-center text-sm font-bold mt-4 ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+                  {status.message}
+                </div>
+              )}
               
               <p className="text-[10px] text-center text-gray-500 uppercase tracking-widest pt-4">
                 Dengan mengirimkan, Anda menyetujui kebijakan pemrosesan data kami untuk pertanyaan industri.

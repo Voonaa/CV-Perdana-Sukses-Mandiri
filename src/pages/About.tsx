@@ -30,7 +30,7 @@ export default function About() {
                    <div className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Proyek Sukses</div>
                  </div>
                  <div>
-                   <div className="text-4xl font-display font-bold text-white mb-1">Lampung</div>
+                   <div className="text-4xl font-display font-bold text-white mb-1">Tangerang</div>
                    <div className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Kantor Pusat</div>
                  </div>
               </div>
