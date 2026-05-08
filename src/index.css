@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-brand-gold: #D4AF37;
+  --color-brand-gold-dark: #B8860B;
+  --color-industrial-black: #0A0A0A;
+  --color-industrial-gray: #1A1A1A;
+  --color-industrial-light-gray: #2A2A2A;
+}
+
+@layer base {
+  body {
+    @apply bg-industrial-black text-white antialiased font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+.glass-morphism {
+  @apply bg-white/5 backdrop-blur-md border border-white/10;
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #D4AF37 0%, #F5D033 50%, #B8860B 100%);
+}
+
+.gold-text-gradient {
+  @apply text-transparent bg-clip-text;
+  background-image: linear-gradient(135deg, #D4AF37 0%, #F5D033 50%, #B8860B 100%);
+}
+
+.industrial-grid {
+  background-image: radial-gradient(circle at 1px 1px, rgba(212, 175, 55, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
+}
