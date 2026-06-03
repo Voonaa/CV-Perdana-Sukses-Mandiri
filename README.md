@@ -19,14 +19,36 @@ Website ini menggunakan arsitektur **Fullstack** dengan React di bagian frontend
 
 1.  **Pastikan Database Siap**:
     *   Buat database bernama `CVperdana` di MySQL.
-    *   Buat tabel `contacts` dengan struktur berikut (atau jalankan perintah SQL):
+    *   Jalankan perintah SQL berikut untuk membuat tabel-tabel yang diperlukan:
         ```sql
+        -- Tabel Contacts
         CREATE TABLE contacts (
           id INT AUTO_INCREMENT PRIMARY KEY,
           name VARCHAR(255) NOT NULL,
           email VARCHAR(255) NOT NULL,
           inquiry_type VARCHAR(255) NOT NULL,
           message TEXT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        -- Tabel Users (Autentikasi Admin & Member)
+        CREATE TABLE users (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          email VARCHAR(255) NOT NULL UNIQUE,
+          password VARCHAR(255) NOT NULL,
+          role VARCHAR(50) NOT NULL DEFAULT 'member',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        -- Tabel Products (Katalog Peralatan Industri)
+        CREATE TABLE products (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          category VARCHAR(255) NOT NULL,
+          description TEXT NOT NULL,
+          specs TEXT NOT NULL,
+          image VARCHAR(255) NOT NULL,
+          featured BOOLEAN DEFAULT FALSE,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         ```

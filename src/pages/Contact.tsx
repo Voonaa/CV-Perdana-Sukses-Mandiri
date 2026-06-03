@@ -116,6 +116,7 @@ export default function Contact() {
           </div>
 
           <motion.div 
+            id="contact-form"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-industrial-gray border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl relative"

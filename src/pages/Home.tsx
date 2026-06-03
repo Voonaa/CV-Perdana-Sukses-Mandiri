@@ -168,8 +168,8 @@ export default function Home() {
               <div className="absolute -top-10 -left-10 w-40 h-40 border-l border-t border-brand-gold/30" />
               <img 
                 src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=1000" 
-                alt="Keanggulan Industri"
-                className="rounded-2xl shadow-2xl relative z-10"
+                alt="Keunggulan Industri"
+                className="rounded-2xl shadow-2xl relative z-10 w-full max-w-md mx-auto h-[400px] object-cover"
               />
               <div className="absolute -bottom-10 -right-10 w-full h-full bg-brand-gold/5 rounded-2xl -z-10" />
             </div>
@@ -220,8 +220,8 @@ export default function Home() {
             Bergabunglah dengan ratusan perusahaan yang mempercayai CV Perdana Sukses Mandiri untuk infrastruktur industri kritis mereka.
           </p>
           <Link 
-            to="/kontak" 
-            className="inline-flex items-center gap-3 px-12 py-6 bg-industrial-black text-white text-lg font-black rounded-xl hover:scale-105 transition-transform shadow-2xl"
+            to="/kontak#contact-form" 
+            className="relative z-10 inline-flex items-center gap-3 px-12 py-6 bg-industrial-black text-white text-lg font-black rounded-xl hover:scale-105 transition-transform shadow-2xl"
           >
             MULAI KONSULTASI <ArrowRight className="w-6 h-6" />
           </Link>
