@@ -101,6 +101,17 @@ const initDb = async () => {
       }
     }
 
+    // Seed default admin user if empty
+    const userCountRes = await pool.query('SELECT id FROM users LIMIT 1');
+    if (userCountRes.rowCount === 0) {
+      console.log('Seeding default admin...');
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      await pool.query(
+        "INSERT INTO users (email, password, role) VALUES ($1, $2, 'admin')",
+        ['admin@cvperdanasukses.com', hashedPassword]
+      );
+    }
+
     console.log('Database tables initialized');
   } catch (err) {
     console.error('Error initializing database tables:', err);
