@@ -104,7 +104,7 @@ export default function Contact() {
 
             <div className="mt-12 rounded-2xl overflow-hidden grayscale contrast-125 border border-white/10 h-64">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.370110723146!2d106.69151439999999!3d-6.346095699999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e5a6e26dc3cd%3A0xccd6344b8021119d!2sUniversitas%20Pamulang%20Kampus%202%20(UNPAM%20Viktor)!5e0!3m2!1sid!2sid!4v1780478393155!5m2!1sid!2sid"
+                src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3966.3882868985356!2d106.4873906!3d-6.2124125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s6P58QFQP%2B2XJ!5e0!3m2!1sid!2sid!4v1782211859383!5m2!1sid!2sid"
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
