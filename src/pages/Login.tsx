@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../constants';
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,7 +15,7 @@ export default function Login() {
     e.preventDefault();
     setError('');
 
-    const endpoint = isLogin ? '/api/login' : '/api/register';
+    const endpoint = isLogin ? `${API_BASE_URL}/api/login` : `${API_BASE_URL}/api/register`;
     
     try {
       const response = await fetch(endpoint, {

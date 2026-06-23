@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Search, ArrowUpRight, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { CONTACT_INFO } from '../constants';
+import { CONTACT_INFO, API_BASE_URL } from '../constants';
 
 const CATEGORIES = ['Semua', 'Videotron', 'Lampu Jalan Tenaga Surya', 'Meja Pelayanan Kantor Desa', 'Neon Box', 'Running Text', 'Papan Billboard', 'Plafon', 'Wastafel', 'Mesin Antrian'];
 
@@ -12,7 +12,7 @@ export default function Products() {
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${API_BASE_URL}/api/products`)
       .then(res => res.json())
       .then(data => {
         const parsedData = data.map((p: any) => ({

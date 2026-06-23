@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { PackagePlus, LogOut, CheckCircle, Edit, Trash2, Save, X, List, LayoutDashboard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../constants';
 
 export default function Admin() {
   const [name, setName] = useState('');
@@ -37,7 +38,7 @@ export default function Admin() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('/api/products');
+      const res = await fetch(`${API_BASE_URL}/api/products`);
       const data = await res.json();
       setProducts(data);
     } catch (err) {
@@ -75,7 +76,7 @@ export default function Admin() {
     
     const specsString = JSON.stringify(specsObj);
 
-    const endpoint = editingId ? `/api/products/${editingId}` : '/api/products';
+    const endpoint = editingId ? `${API_BASE_URL}/api/products/${editingId}` : `${API_BASE_URL}/api/products`;
     const method = editingId ? 'PUT' : 'POST';
 
     let uploadedImagePath = image;
@@ -85,7 +86,7 @@ export default function Admin() {
       formData.append('image', selectedFile);
 
       try {
-        const uploadRes = await fetch('/api/upload', {
+        const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -169,7 +170,7 @@ export default function Admin() {
     if (!deletingId) return;
 
     try {
-      const response = await fetch(`/api/products/${deletingId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/${deletingId}`, {
         method: 'DELETE',
         headers: { 
           'Authorization': `Bearer ${localStorage.getItem('token')}`

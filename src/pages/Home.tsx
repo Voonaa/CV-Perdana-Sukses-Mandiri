@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, ChevronRight, Play, Shield, Zap, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { STATS } from '../constants';
+import { STATS, API_BASE_URL } from '../constants';
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${API_BASE_URL}/api/products`)
       .then(res => res.json())
       .then(data => {
         const parsedData = data.map((p: any) => ({

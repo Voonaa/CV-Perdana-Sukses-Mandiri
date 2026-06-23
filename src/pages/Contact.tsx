@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Send, Instagram, Linkedin, MessageCircle } from 'lucide-react';
-import { CONTACT_INFO } from '../constants';
+import { CONTACT_INFO, API_BASE_URL } from '../constants';
 
 export default function Contact() {
   const [formData, setFormData] = React.useState({
@@ -20,7 +20,7 @@ export default function Contact() {
     e.preventDefault();
     setStatus({ type: 'loading', message: 'Mengirim...' });
     try {
-      const response = await fetch('/api/contacts', {
+      const response = await fetch(`${API_BASE_URL}/api/contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
