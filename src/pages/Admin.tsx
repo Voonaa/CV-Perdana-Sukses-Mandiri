@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { PackagePlus, LogOut, CheckCircle, Edit, Trash2, Save, X, List, LayoutDashboard } from 'lucide-react';
+import { PackagePlus, LogOut, CheckCircle, Edit, Trash2, Save, X, List, LayoutDashboard, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../constants';
 
@@ -10,14 +10,14 @@ export default function Admin() {
   const [description, setDescription] = useState('');
   const [specList, setSpecList] = useState([{ key: 'Pitch', value: '2.5mm' }, { key: 'Refresh Rate', value: '3840Hz' }]);
   const [image, setImage] = useState('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [featured, setFeatured] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   
   const [products, setProducts] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [currentTab, setCurrentTab] = useState<'list' | 'add' | 'edit'>('list');
+  const [currentTab, setCurrentTab] = useState<'list' | 'add' | 'edit' | 'inbox'>('list');
   
   // Custom Modal State
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -33,6 +33,7 @@ export default function Admin() {
       navigate('/login');
     } else {
       fetchProducts();
+      fetchContacts();
     }
   }, [navigate]);
 
@@ -41,6 +42,18 @@ export default function Admin() {
       const res = await fetch(`${API_BASE_URL}/api/products`);
       const data = await res.json();
       setProducts(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchContacts = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/contacts`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      const data = await res.json();
+      setContacts(data);
     } catch (err) {
       console.error(err);
     }
@@ -60,7 +73,6 @@ export default function Admin() {
     setImage('');
     setFeatured(false);
     setEditingId(null);
-    setSelectedFile(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,33 +91,7 @@ export default function Admin() {
     const endpoint = editingId ? `${API_BASE_URL}/api/products/${editingId}` : `${API_BASE_URL}/api/products`;
     const method = editingId ? 'PUT' : 'POST';
 
-    let uploadedImagePath = image;
-
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append('image', selectedFile);
-
-      try {
-        const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: formData
-        });
-
-        const uploadData = await uploadRes.json();
-
-        if (!uploadRes.ok) {
-          throw new Error(uploadData.error || 'Gagal mengupload gambar');
-        }
-
-        uploadedImagePath = uploadData.path;
-      } catch (err: any) {
-        setError(err.message);
-        return;
-      }
-    }
+    const finalImage = image || 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=1000';
 
     try {
       const response = await fetch(endpoint, {
@@ -114,7 +100,7 @@ export default function Admin() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ name, category, description, specs: specsString, image: uploadedImagePath, featured })
+        body: JSON.stringify({ name, category, description, specs: specsString, image: finalImage, featured })
       });
 
       const data = await response.json();
@@ -189,6 +175,23 @@ export default function Admin() {
     }
   };
 
+  const handleDeleteContact = async (id: number) => {
+    if (!window.confirm('Yakin ingin menghapus pesan ini?')) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/contacts/${id}`, {
+        method: 'DELETE',
+        headers: { 
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (!response.ok) throw new Error('Gagal menghapus pesan');
+      setMessage('Pesan berhasil dihapus!');
+      fetchContacts();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="bg-industrial-black min-h-screen pt-32 pb-20 px-6">
       <div className="max-w-7xl mx-auto">
@@ -225,6 +228,22 @@ export default function Admin() {
                   <PackagePlus className="w-4 h-4" />
                   Tambah Produk
                 </button>
+                <button
+                  onClick={() => { setCurrentTab('inbox'); setEditingId(null); }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                    currentTab === 'inbox' 
+                      ? 'bg-brand-gold text-industrial-black' 
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  Pesan Masuk
+                  {contacts.length > 0 && (
+                    <span className="ml-auto bg-white/10 text-white text-xs py-1 px-2 rounded-full">
+                      {contacts.length}
+                    </span>
+                  )}
+                </button>
               </nav>
               
               <div className="mt-8 pt-6 border-t border-white/5">
@@ -245,12 +264,12 @@ export default function Admin() {
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-[1px] bg-brand-gold" />
                 <span className="text-brand-gold font-mono text-sm uppercase tracking-widest font-bold">
-                  {currentTab === 'list' ? 'Katalog' : currentTab === 'add' ? 'Input' : 'Update'}
+                  {currentTab === 'list' ? 'Katalog' : currentTab === 'add' ? 'Input' : currentTab === 'inbox' ? 'Pesan' : 'Update'}
                 </span>
               </div>
               <h1 className="text-5xl font-display font-black text-white tracking-tighter">
-                {currentTab === 'list' ? 'DAFTAR' : currentTab === 'add' ? 'TAMBAH' : 'EDIT'}{' '}
-                <span className="gold-text-gradient">PRODUK</span>
+                {currentTab === 'list' ? 'DAFTAR' : currentTab === 'add' ? 'TAMBAH' : currentTab === 'inbox' ? 'PESAN' : 'EDIT'}{' '}
+                <span className="gold-text-gradient">{currentTab === 'inbox' ? 'MASUK' : 'PRODUK'}</span>
               </h1>
             </div>
 
@@ -412,16 +431,16 @@ export default function Admin() {
                 </div>
 
                 <div>
-                  <label className="text-gray-500 text-xs uppercase font-bold tracking-widest block mb-2">Gambar Produk</label>
+                  <label className="text-gray-500 text-xs uppercase font-bold tracking-widest block mb-2">URL Gambar Produk</label>
                   <input 
-                    type="file" 
-                    onChange={(e) => setSelectedFile(e.target.files ? e.target.files[0] : null)}
+                    type="url" 
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
                     className="w-full bg-industrial-black/50 border border-white/10 rounded-xl py-4 px-4 text-white focus:outline-none focus:border-brand-gold transition-colors"
-                    accept="image/*"
-                    required={!editingId}
+                    placeholder="Contoh: https://images.unsplash.com/... (Kosongkan untuk default)"
                   />
-                  {editingId && image && (
-                    <p className="text-xs text-gray-500 mt-2">File saat ini: {image}</p>
+                  {image && (
+                    <img src={image} alt="Preview" className="mt-4 h-32 object-cover rounded-xl border border-white/10" />
                   )}
                 </div>
 
@@ -459,6 +478,48 @@ export default function Admin() {
                   )}
                 </div>
               </form>
+            )}
+
+            {currentTab === 'inbox' && (
+              <div className="bg-industrial-gray border border-white/5 rounded-2xl p-6 md:p-10 space-y-6">
+                {contacts.length === 0 ? (
+                  <div className="text-center py-10 text-gray-500">
+                    Belum ada pesan masuk.
+                  </div>
+                ) : (
+                  contacts.map((contact) => (
+                    <div key={contact.id} className="bg-industrial-black/50 border border-white/10 rounded-xl p-6 relative">
+                      <button 
+                        onClick={() => handleDeleteContact(contact.id)}
+                        className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-red-500/20 hover:text-red-500 rounded-lg transition-all"
+                        title="Hapus Pesan"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-white font-bold text-lg">{contact.name}</h3>
+                          <p className="text-brand-gold text-sm">{contact.email}</p>
+                        </div>
+                        <span className="text-gray-500 text-xs">
+                          {new Date(contact.created_at).toLocaleDateString('id-ID', {
+                            year: 'numeric', month: 'long', day: 'numeric',
+                            hour: '2-digit', minute: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                      <div className="mb-4">
+                        <span className="inline-block bg-white/10 text-white text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+                          {contact.inquiry_type}
+                        </span>
+                      </div>
+                      <div className="bg-industrial-gray border border-white/5 rounded-lg p-4 text-gray-300 text-sm whitespace-pre-wrap">
+                        {contact.message}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             )}
 
           </div>

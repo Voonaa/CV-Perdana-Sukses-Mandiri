@@ -156,6 +156,29 @@ app.post('/api/contacts', async (req, res) => {
   }
 });
 
+app.get('/api/contacts', authenticateToken, async (req: any, res) => {
+  if (req.user.role !== 'admin') return res.sendStatus(403);
+
+  try {
+    const result = await pool.query('SELECT * FROM contacts ORDER BY created_at DESC');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/contacts/:id', authenticateToken, async (req: any, res) => {
+  if (req.user.role !== 'admin') return res.sendStatus(403);
+
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM contacts WHERE id = $1', [id]);
+    res.json({ message: 'Contact deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Auth Routes
 app.post('/api/register', async (req, res) => {
   const { email, password, role } = req.body;
