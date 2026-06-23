@@ -53,6 +53,54 @@ const initDb = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    
+    // Seed default products if empty
+    const { rowCount } = await pool.query('SELECT id FROM products LIMIT 1');
+    if (rowCount === 0) {
+      console.log('Seeding default products...');
+      const defaultProducts = [
+        {
+          name: 'Videotron P2.5 Indoor High Resolution',
+          category: 'Videotron',
+          description: 'Tampilan visual kristal untuk ruang rapat, auditorium, dan pusat kontrol.',
+          specs: JSON.stringify({'Pitch': '2.5mm', 'Refresh Rate': '3840Hz', 'Brightness': '800 nits'}),
+          image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1000',
+          featured: true
+        },
+        {
+          name: 'Lampu Jalan All-in-One 100W',
+          category: 'Lampu Jalan Tenaga Surya',
+          description: 'Solusi penerangan jalan mandiri dengan panel surya terintegrasi dan baterai litium.',
+          specs: JSON.stringify({'Power': '100W', 'Battery': 'LiFePO4 3.2V 60Ah', 'Solar Panel': '18V 100W'}),
+          image: 'https://images.unsplash.com/photo-1509391366360-fe5bb6585828?auto=format&fit=crop&q=80&w=1000',
+          featured: true
+        },
+        {
+          name: 'Meja Pelayanan Terpadu Minimalis',
+          category: 'Meja Pelayanan Kantor Desa',
+          description: 'Desain ergonomis khusus untuk efisiensi pelayanan administrasi kantor desa.',
+          specs: JSON.stringify({'Material': 'Solid Wood + HPL Finish', 'Dimension': '240 x 80 x 110 cm', 'Feature': 'Cable Management System'}),
+          image: 'https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?auto=format&fit=crop&q=80&w=1000',
+          featured: true
+        },
+        {
+          name: 'Neon Box Acrylic 2 Sisi',
+          category: 'Neon Box',
+          description: 'Identitas toko yang cerah dan tahan cuaca dengan lampu LED hemat energi.',
+          specs: JSON.stringify({'Frame': 'Aluminum Profile', 'Cover': 'Acrylic 3mm', 'Lighting': 'Samsung LED Modules'}),
+          image: 'https://images.unsplash.com/photo-1563206767-5b18f218e8de?auto=format&fit=crop&q=80&w=1000',
+          featured: false
+        }
+      ];
+
+      for (const p of defaultProducts) {
+        await pool.query(
+          'INSERT INTO products (name, category, description, specs, image, featured) VALUES ($1, $2, $3, $4, $5, $6)',
+          [p.name, p.category, p.description, p.specs, p.image, p.featured]
+        );
+      }
+    }
+
     console.log('Database tables initialized');
   } catch (err) {
     console.error('Error initializing database tables:', err);
