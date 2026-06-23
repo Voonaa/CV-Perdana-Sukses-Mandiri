@@ -65,6 +65,6 @@ export const CONTACT_INFO = {
   whatsapp: '+6288976738570',
   address: 'CV Perdana Sukses Mandiri, QFQP+2XJ Sukanagara, Tangerang Regency, Banten',
   googleMapsPlusCode: 'QFQP+2XJ',
-  email: 'solutions@psm-industrial.com',
+  email: 'ambon@psm-industrial.com',
   phone: '+62 889-7673-8570'
 };
